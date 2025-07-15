@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User
+
+from .forms import RegisterForm
 
 
 def index(request):
@@ -38,26 +40,19 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
-
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password)
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data["password"])
             user.save()
-        except IntegrityError:
+            login(request, user)
+            return redirect("index")
+        else:
             return render(request, "auctions/register.html", {
-                "message": "Username already taken."
+                "form": form
             })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "auctions/register.html")
+        form = RegisterForm()
+        return render(request, "auctions/register.html", {
+            "form": form
+        })
