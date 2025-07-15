@@ -1,7 +1,6 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from .models import Listing
+from .models import Listing, User
 
 
 class RegisterForm(forms.ModelForm):
