@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from .models import Listing
 
 
 class RegisterForm(forms.ModelForm):
@@ -28,3 +29,18 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={"placeholder": "Password"})
     )
+
+
+class CreateListingForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ['title', 'description',
+                  'starting_bid', 'image_url', 'category']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Enter title'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Enter description'}),
+            'starting_bid': forms.NumberInput(attrs={'placeholder': 'Starting bid'}),
+            'image_url': forms.URLInput(attrs={'placeholder': 'Optional image URL'}),
+            'category': forms.TextInput(attrs={'placeholder': 'Optional category (e.g. Fashion)'}),
+        }

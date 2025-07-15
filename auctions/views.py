@@ -1,13 +1,14 @@
-from .forms import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import User, Listing
 
-from .forms import RegisterForm
+# Import forms
+from .forms import RegisterForm, CreateListingForm
 from .forms import LoginForm
 
 
@@ -58,3 +59,20 @@ def register(request):
         return render(request, "auctions/register.html", {
             "form": form
         })
+
+
+@login_required
+def create_listing(request):
+    if request.method == "POST":
+        form = CreateListingForm(request.POST)
+        if form.is_valid():
+            listing = form.save(commit=False)
+            listing.owner = request.user  # Set the current user as the owner
+            listing.save()
+            return redirect('index')
+    else:
+        form = CreateListingForm()
+
+    return render(request, "auctions/create_listing.html", {
+        "form": form
+    })
