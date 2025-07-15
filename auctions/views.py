@@ -1,3 +1,4 @@
+from .forms import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -7,6 +8,7 @@ from django.urls import reverse
 from .models import User
 
 from .forms import RegisterForm
+from .forms import LoginForm
 
 
 def index(request):
@@ -15,22 +17,22 @@ def index(request):
 
 def login_view(request):
     if request.method == "POST":
-
-        # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("index"))
-        else:
-            return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
-            })
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("index")
+            else:
+                form.add_error(None, "Invalid username or password.")
     else:
-        return render(request, "auctions/login.html")
+        form = LoginForm()
+
+    return render(request, "auctions/login.html", {
+        "form": form
+    })
 
 
 def logout_view(request):
