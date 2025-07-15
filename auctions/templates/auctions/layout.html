@@ -11,9 +11,9 @@
         <h1>Auctions</h1>
         <div>
             {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
+                You are signed in as <strong>{{ user.username }}</strong>.
             {% else %}
-                Not signed in.
+                You have not signed in yet.
             {% endif %}
         </div>
         <ul class="nav">
