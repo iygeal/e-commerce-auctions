@@ -1,5 +1,7 @@
 {% extends "auctions/layout.html" %}
 
+{% load static %}
+
 {% block body %}
   <div class="container mt-4">
     <h2 class="mb-4">Active Listings</h2>
@@ -13,9 +15,16 @@
                 <img src="{{ listing.image_url }}" class="card-img-top" alt="{{ listing.title }}">
               {% endif %}
               <div class="card-body">
-                <h5 class="card-title">{{ listing.title }}</h5>
-                <p class="card-text">{{ listing.description }}</p>
-                <p><strong>Price:</strong> ${{ listing.starting_bid }}</p>
+                <h5 class="card-title">
+                  <a href="{% url 'listing' listing.id %}" class="text-decoration-none text-dark">
+                    {{ listing.title }}
+                  </a>
+                </h5>
+                <p class="card-text">{{ listing.description|truncatewords:15 }}</p>
+                <p><strong>Current Price:</strong> ${{ listing.current_price }}</p>
+                {% if listing.category %}
+                  <p><strong>Category:</strong> {{ listing.category.name }}</p>
+                {% endif %}
               </div>
             </div>
           </div>

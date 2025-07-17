@@ -104,3 +104,15 @@ def listing(request, listing_id):
     return render(request, "auctions/listing.html", {
         "listing": listing
     })
+
+
+@login_required
+def toggle_watchlist(request, listing_id):
+    listing = get_object_or_404(Listing, id=listing_id)
+
+    if listing in request.user.watchlist.all():
+        request.user.watchlist.remove(listing)
+    else:
+        request.user.watchlist.add(listing)
+
+    return redirect("listing", listing_id=listing_id)
