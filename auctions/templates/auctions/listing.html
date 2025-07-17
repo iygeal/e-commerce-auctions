@@ -16,6 +16,16 @@
   <p><strong>Category:</strong> {{ listing.category }}</p>
   <p><strong>Created by:</strong> {{ listing.owner }}</p>
 
-  
+  {% if user.is_authenticated %}
+    <form action="{% url 'toggle_watchlist' listing.id %}" method="post" class="mb-3">
+        {% csrf_token %}
+        {% if listing in user.watchlist.all %}
+        <button type="submit" class="btn btn-warning">Remove from Watchlist</button>
+        {% else %}
+        <button type="submit" class="btn btn-outline-primary">Add to Watchlist</button>
+        {% endif %}
+    </form>
+  {% endif %}
+
 </div>
 {% endblock %}
