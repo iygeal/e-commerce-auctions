@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -66,6 +66,16 @@ def register(request):
 
 @login_required
 def create_listing(request):
+    """
+    Handle the creation of a new listing.
+
+    This view requires the user to be authenticated. If the request method is
+    POST, it processes the submitted form data to create a new listing. The
+    current user is set as the owner of the listing. Upon successful creation,
+    the user is redirected to the index page. If the request method is GET, it
+    renders the create listing page with an empty form.
+    """
+
     if request.method == "POST":
         form = CreateListingForm(request.POST)
         if form.is_valid():
@@ -78,4 +88,19 @@ def create_listing(request):
 
     return render(request, "auctions/create_listing.html", {
         "form": form
+    })
+
+
+def listing(request, listing_id):
+    """
+    Handle a request to view a specific listing.
+
+    This view requires the user to be authenticated. The view takes a listing
+    ID as an argument. If the listing does not exist, a 404 error is raised.
+    Otherwise, the view renders the listing page with the listing object
+    passed as context.
+    """
+    listing = get_object_or_404(Listing, pk=listing_id)
+    return render(request, "auctions/listing.html", {
+        "listing": listing
     })
