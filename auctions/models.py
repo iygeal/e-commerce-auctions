@@ -19,9 +19,10 @@ class Category(models.Model):
 
 # Listing model
 class Listing(models.Model):
-    """This is the listing model which inherits from models.Model
-        It will be used to create a listing table in the database
-        for each listing created by a user.
+    """
+    This is the listing model which inherits from models.Model
+    It will be used to create a listing table in the database
+    for each listing created by a user.
     """
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -33,8 +34,21 @@ class Listing(models.Model):
         User, on_delete=models.CASCADE, related_name="listings")
     is_active = models.BooleanField(default=True)
 
+    @property
+    def current_price(self):
+        """
+        This is a property method which returns the current price of a listing.
+        It returns the highest bid amount if there are bids, otherwise it returns the starting bid.
+        """
+        highest_bid = self.bids.order_by("-amount").first()
+        return highest_bid.amount if highest_bid else self.starting_bid
+
     def __str__(self):
-        return f"{self.title} (${self.starting_bid})"
+        """
+        This is the string representation of a listing.
+        It returns the title of the listing followed by the current price in parentheses.
+        """
+        return f"{self.title} (${self.current_price})"
 
 
 # Bid model
