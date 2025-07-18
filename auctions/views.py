@@ -1,3 +1,5 @@
+from .models import Listing
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -116,3 +118,21 @@ def toggle_watchlist(request, listing_id):
         request.user.watchlist.add(listing)
 
     return redirect("listing", listing_id=listing_id)
+
+
+@login_required
+def watchlist_view(request):
+    """
+    Handle a request to view a user's watchlist.
+
+    This view requires the user to be authenticated. The view takes no arguments.
+    The view renders the watchlist page with the user's watchlist items
+    passed as context.
+    """
+    user = request.user
+
+    watchlist_items = user.watchlist.all()
+
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": watchlist_items
+    })
