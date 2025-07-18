@@ -16,6 +16,25 @@
   <p><strong>Category:</strong> {{ listing.category }}</p>
   <p><strong>Created by:</strong> {{ listing.owner }}</p>
 
+      {% if user.is_authenticated %}
+      <hr>
+      <h5>Place a Bid</h5>
+      <form method="post">
+        {% csrf_token %}
+        {{ bid_form.amount.label_tag }}
+        {% render_field bid_form.amount class="form-control mb-2" %}
+        <button type="submit" name="place_bid" class="btn btn-primary">Bid</button>
+      </form>
+    {% else %}
+      <p><a href="{% url 'login' %}">Log in</a> to place a bid.</p>
+    {% endif %}
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
   {% if user.is_authenticated %}
     <form action="{% url 'toggle_watchlist' listing.id %}" method="post" class="mb-3">
         {% csrf_token %}

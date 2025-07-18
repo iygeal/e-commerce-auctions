@@ -1,3 +1,4 @@
+from .models import Bid
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Listing, User
@@ -42,4 +43,13 @@ class CreateListingForm(forms.ModelForm):
             'starting_bid': forms.NumberInput(attrs={'placeholder': 'Starting bid'}),
             'image_url': forms.URLInput(attrs={'placeholder': 'Optional image URL'}),
             'category': forms.TextInput(attrs={'placeholder': 'Optional category (e.g. Fashion)'}),
+        }
+
+
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = ['amount']
+        widgets = {
+            'amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter your bid'}),
         }

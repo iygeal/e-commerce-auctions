@@ -6,12 +6,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from .models import User, Listing
+from .models import User, Listing, Bid
 
 # Import forms
-from .forms import RegisterForm, CreateListingForm
-from .forms import LoginForm
+from .forms import (
+    RegisterForm, CreateListingForm,
+    LoginForm, BidForm
+)
 
 
 def index(request):
@@ -135,4 +138,42 @@ def watchlist_view(request):
 
     return render(request, "auctions/watchlist.html", {
         "watchlist": watchlist_items
+    })
+
+
+def listing_view(request, listing_id):
+    listing = get_object_or_404(Listing, pk=listing_id)
+    is_watched = request.user.is_authenticated and request.user.watchlist.filter(
+        pk=listing.pk).exists()
+
+    current_bid = listing.bids.order_by('-amount').first()
+    current_price = current_bid.amount if current_bid else listing.starting_bid
+
+    bid_form = BidForm()
+
+    if request.method == 'POST' and 'place_bid' in request.POST:
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        bid_form = BidForm(request.POST)
+        if bid_form.is_valid():
+            new_bid = bid_form.cleaned_data['amount']
+            if new_bid > current_price:
+                Bid.objects.create(
+                    listing=listing,
+                    bidder=request.user,
+                    amount=new_bid
+                )
+                messages.success(request, "Bid placed successfully!")
+                return redirect('listing', listing_id=listing.id)
+            else:
+                messages.error(
+                    request, f"Your bid must be higher than the current price (${current_price}).")
+
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "current_price": current_price,
+        "is_watched": is_watched,
+        "bid_form": bid_form,
+        "current_bidder": current_bid.bidder if current_bid else None,
     })
