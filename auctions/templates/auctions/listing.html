@@ -1,4 +1,6 @@
 {% extends "auctions/layout.html" %} {% block body %}
+{% load widget_tweaks %}
+
 <div class="container">
   <h2>{{ listing.title }}</h2>
 
@@ -25,15 +27,18 @@
         {% render_field bid_form.amount class="form-control mb-2" %}
         <button type="submit" name="place_bid" class="btn btn-primary">Bid</button>
       </form>
-    {% else %}
+      {% else %}
       <p><a href="{% url 'login' %}">Log in</a> to place a bid.</p>
-    {% endif %}
+      {% endif %}
 
     {% if messages %}
       {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
       {% endfor %}
-    {% endif %}
+     {% endif %}
+      {% if bid_form.errors %}
+        <div class="alert alert-danger">{{ bid_form.errors }}</div>
+      {% endif %}
 
   {% if user.is_authenticated %}
     <form action="{% url 'toggle_watchlist' listing.id %}" method="post" class="mb-3">
