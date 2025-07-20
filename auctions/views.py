@@ -96,21 +96,6 @@ def create_listing(request):
     })
 
 
-def listing(request, listing_id):
-    """
-    Handle a request to view a specific listing.
-
-    This view requires the user to be authenticated. The view takes a listing
-    ID as an argument. If the listing does not exist, a 404 error is raised.
-    Otherwise, the view renders the listing page with the listing object
-    passed as context.
-    """
-    listing = get_object_or_404(Listing, pk=listing_id)
-    return render(request, "auctions/listing.html", {
-        "listing": listing
-    })
-
-
 @login_required
 def toggle_watchlist(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
@@ -141,7 +126,7 @@ def watchlist_view(request):
     })
 
 
-def listing_view(request, listing_id):
+def listing(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
     is_watched = request.user.is_authenticated and request.user.watchlist.filter(
         pk=listing.pk).exists()
@@ -157,13 +142,12 @@ def listing_view(request, listing_id):
 
         bid_form = BidForm(request.POST)
         if bid_form.is_valid():
-            new_bid = bid_form.cleaned_data['amount']
-            if new_bid > current_price:
-                Bid.objects.create(
-                    listing=listing,
-                    bidder=request.user,
-                    amount=new_bid
-                )
+            new_bid = bid_form.save(commit=False)
+            new_bid.listing = listing
+            new_bid.bidder = request.user
+
+            if new_bid.amount > current_price:
+                new_bid.save()
                 messages.success(request, "Bid placed successfully!")
                 return redirect('listing', listing_id=listing.id)
             else:

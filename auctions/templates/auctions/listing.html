@@ -18,27 +18,31 @@
   <p><strong>Category:</strong> {{ listing.category }}</p>
   <p><strong>Created by:</strong> {{ listing.owner }}</p>
 
-      {% if user.is_authenticated %}
-      <hr>
+    {% if user.is_authenticated %}
       <h5>Place a Bid</h5>
-      <form method="post">
-        {% csrf_token %}
-        {{ bid_form.amount.label_tag }}
-        {% render_field bid_form.amount class="form-control mb-2" %}
-        <button type="submit" name="place_bid" class="btn btn-primary">Bid</button>
-      </form>
-      {% else %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="id_amount">Your Bid</label>
+        {% render_field bid_form.amount class="form-control" placeholder="Enter your bid" %}
+      </div>
+      <button type="submit" name="place_bid" class="btn btn-primary">Bid</button>
+    </form>
+    {% else %}
       <p><a href="{% url 'login' %}">Log in</a> to place a bid.</p>
-      {% endif %}
+    {% endif %}
 
     {% if messages %}
       {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
       {% endfor %}
-     {% endif %}
-      {% if bid_form.errors %}
-        <div class="alert alert-danger">{{ bid_form.errors }}</div>
-      {% endif %}
+    {% endif %}
+
+    {% if bid_form.errors %}
+      <div class="alert alert-danger">
+        {{ bid_form.errors }}
+      </div>
+    {% endif %}
 
   {% if user.is_authenticated %}
     <form action="{% url 'toggle_watchlist' listing.id %}" method="post" class="mb-3">

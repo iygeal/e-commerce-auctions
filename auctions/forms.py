@@ -47,12 +47,13 @@ class CreateListingForm(forms.ModelForm):
 
 
 # forms.py
-class BidForm(forms.Form):  # Used plain form instead of ModelForm
-    amount = forms.DecimalField(  # which ties to a model
-        max_digits=10,
-        decimal_places=2,
-        min_value=0.01,
-        widget=forms.NumberInput(
-            attrs={'class': 'form-control', 'placeholder': 'Enter your bid'}),
-        label="Your Bid"
-    )
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = ['amount']
+        widgets = {
+            'amount': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your bid'
+            })
+        }
