@@ -46,7 +46,7 @@ class CreateListingForm(forms.ModelForm):
         }
 
 
-# Bid form
+# Bid form using ModelForm
 class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
