@@ -1,7 +1,7 @@
 from .models import Bid
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Listing, User
+from .models import Listing, User, Category
 
 
 class RegisterForm(forms.ModelForm):
@@ -36,13 +36,20 @@ class CreateListingForm(forms.ModelForm):
         model = Listing
         fields = ['title', 'description',
                   'starting_bid', 'image_url', 'category']
-
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter title'}),
             'description': forms.Textarea(attrs={'placeholder': 'Enter description'}),
             'starting_bid': forms.NumberInput(attrs={'placeholder': 'Starting bid'}),
             'image_url': forms.URLInput(attrs={'placeholder': 'Optional image URL'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Make sure 'category' field is a dropdown with a friendly label
+        self.fields['category'].queryset = Category.objects.all()
+        self.fields['category'].required = False
+        self.fields['category'].empty_label = "Select a category (optional)"
 
 
 # Bid form using ModelForm
