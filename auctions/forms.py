@@ -42,7 +42,6 @@ class CreateListingForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'placeholder': 'Enter description'}),
             'starting_bid': forms.NumberInput(attrs={'placeholder': 'Starting bid'}),
             'image_url': forms.URLInput(attrs={'placeholder': 'Optional image URL'}),
-            'category': forms.TextInput(attrs={'placeholder': 'Optional category (e.g. Fashion)'}),
         }
 
 
