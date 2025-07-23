@@ -1,15 +1,16 @@
-{% extends "auctions/layout.html" %} {% block body %}
+{% extends "auctions/layout.html" %}
+{% block body %}
 {% load widget_tweaks %}
 
 <div class="container">
   <h2>{{ listing.title }}</h2>
 
   {% if listing.image_url %}
-  <img
-    src="{{ listing.image_url }}"
-    alt="{{ listing.title }}"
-    class="img-fluid mb-3"
-  />
+    <img
+      src="{{ listing.image_url }}"
+      alt="{{ listing.title }}"
+      class="img-fluid mb-3"
+    />
   {% endif %}
 
   <p><strong>Description:</strong> {{ listing.description }}</p>
@@ -18,8 +19,8 @@
   <p><strong>Category:</strong> {{ listing.category }}</p>
   <p><strong>Created by:</strong> {{ listing.owner }}</p>
 
-    {% if user.is_authenticated %}
-      <h5>Place a Bid</h5>
+  {% if user.is_authenticated %}
+    <h5>Place a Bid</h5>
     <form method="post">
       {% csrf_token %}
       <div class="mb-3">
@@ -28,32 +29,50 @@
       </div>
       <button type="submit" name="place_bid" class="btn btn-primary">Bid</button>
     </form>
-    {% else %}
-      <p><a href="{% url 'login' %}">Log in</a> to place a bid.</p>
-    {% endif %}
 
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-      {% endfor %}
+    {% if user == listing.owner and listing.is_active %}
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="close_auction" class="btn btn-danger mt-2">Close Auction</button>
+      </form>
     {% endif %}
+  {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to place a bid.</p>
+  {% endif %}
 
-    {% if bid_form.errors %}
-      <div class="alert alert-danger">
-        {{ bid_form.errors }}
-      </div>
-    {% endif %}
+  {% if not listing.is_active %}
+    <div class="alert alert-info mt-3">
+      <strong>This auction is now closed.</strong><br>
+      {% if listing.winner %}
+        Winner: {{ listing.winner.username }}
+      {% else %}
+        No bids were placed.
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  {% if bid_form.errors %}
+    <div class="alert alert-danger">
+      {{ bid_form.errors }}
+    </div>
+  {% endif %}
 
   {% if user.is_authenticated %}
     <form action="{% url 'toggle_watchlist' listing.id %}" method="post" class="mb-3">
-        {% csrf_token %}
-        {% if listing in user.watchlist.all %}
+      {% csrf_token %}
+      {% if listing in user.watchlist.all %}
         <button type="submit" class="btn btn-warning">Remove from Watchlist</button>
-        {% else %}
+      {% else %}
         <button type="submit" class="btn btn-outline-primary">Add to Watchlist</button>
-        {% endif %}
+      {% endif %}
     </form>
   {% endif %}
-
 </div>
+
 {% endblock %}

@@ -136,23 +136,35 @@ def listing(request, listing_id):
 
     bid_form = BidForm()
 
-    if request.method == 'POST' and 'place_bid' in request.POST:
-        if not request.user.is_authenticated:
-            return redirect('login')
+    if request.method == 'POST':
+        # Closing auction
+        if 'close_auction' in request.POST and request.user == listing.owner:
+            listing.is_active = False
+            highest_bid = listing.bids.order_by("-amount").first()
+            if highest_bid:
+                listing.winner = highest_bid.bidder
+            listing.save()
+            messages.success(request, "Auction closed successfully.")
+            return redirect('listing', listing_id=listing.id)
 
-        bid_form = BidForm(request.POST)
-        if bid_form.is_valid():
-            new_bid = bid_form.save(commit=False)
-            new_bid.listing = listing
-            new_bid.bidder = request.user
+        # Placing a bid
+        if 'place_bid' in request.POST:
+            if not request.user.is_authenticated:
+                return redirect('login')
 
-            if new_bid.amount > current_price:
-                new_bid.save()
-                messages.success(request, "Bid placed successfully!")
-                return redirect('listing', listing_id=listing.id)
-            else:
-                messages.error(
-                    request, f"Your bid must be higher than the current price (${current_price}).")
+            bid_form = BidForm(request.POST)
+            if bid_form.is_valid():
+                new_bid = bid_form.save(commit=False)
+                new_bid.listing = listing
+                new_bid.bidder = request.user
+
+                if new_bid.amount > current_price:
+                    new_bid.save()
+                    messages.success(request, "Bid placed successfully!")
+                    return redirect('listing', listing_id=listing.id)
+                else:
+                    messages.error(
+                        request, f"Your bid must be higher than the current price (${current_price}).")
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
