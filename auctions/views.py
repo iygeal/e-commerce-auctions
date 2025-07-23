@@ -173,3 +173,17 @@ def listing(request, listing_id):
         "bid_form": bid_form,
         "current_bidder": current_bid.bidder if current_bid else None,
     })
+
+
+def closed_listings(request):
+    """
+    This view renders the page for closed listings.
+
+    The view requires no arguments and is accessible by anyone. The view
+    renders the closed_listings.html template and passes the closed listings
+    as context.
+    """
+    listings = Listing.objects.filter(is_active=False).order_by('-id')
+    return render(request, "auctions/closed_listings.html", {
+        "listings": listings
+    })

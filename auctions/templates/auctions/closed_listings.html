@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+  <div class="container">
+    <h2>Closed Auctions</h2>
+    <div class="row">
+      {% for listing in listings %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            {% if listing.image_url %}
+              <img src="{{ listing.image_url }}" class="card-img-top" alt="{{ listing.title }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ listing.title }}</h5>
+              <p class="card-text">{{ listing.description|truncatewords:20 }}</p>
+              <p><strong>Final Price:</strong> ${{ listing.current_price }}</p>
+              {% if listing.winner %}
+                <p><strong>Winner:</strong> {{ listing.winner.username }}</p>
+              {% endif %}
+              <a href="{% url 'listing' listing.id %}" class="btn btn-outline-secondary btn-sm">View Listing</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No closed listings yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
