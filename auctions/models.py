@@ -37,6 +37,9 @@ class Listing(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="listings")
     is_active = models.BooleanField(default=True)
+    winner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="won_auctions")
+
 
     @property
     def current_price(self):
