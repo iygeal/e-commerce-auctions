@@ -21,7 +21,7 @@ class Category(models.Model):
         return self.name
 
 
-# Listing model
+# Listing model of the auction app
 class Listing(models.Model):
     """
     This is the listing model which inherits from models.Model
