@@ -166,12 +166,16 @@ def listing(request, listing_id):
                     messages.error(
                         request, f"Your bid must be higher than the current price (${current_price}).")
 
+    # Check if the user won the auction
+    user_is_winner = request.user.is_authenticated and not listing.is_active and request.user == listing.winner
+
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "current_price": current_price,
         "is_watched": is_watched,
         "bid_form": bid_form,
         "current_bidder": current_bid.bidder if current_bid else None,
+        "user_is_winner": user_is_winner
     })
 
 

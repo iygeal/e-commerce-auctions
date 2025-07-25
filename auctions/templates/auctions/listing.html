@@ -45,6 +45,11 @@
       <strong>This auction is now closed.</strong><br>
       {% if listing.winner %}
         Winner: {{ listing.winner.username }}
+        {% if user_is_winner %}
+        <div class="alert alert-success mt-2">
+          Congratulations, you won the auction!
+        </div>
+        {% endif %}
       {% else %}
         No bids were placed.
       {% endif %}
