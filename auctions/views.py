@@ -176,7 +176,7 @@ def listing(request, listing_id):
             if comment_form.is_valid():
                 new_comment = comment_form.save(commit=False)
                 new_comment.listing = listing
-                new_comment.user = request.user
+                new_comment.commenter = request.user
                 new_comment.save()
                 messages.success(request, "Comment added!")
                 return redirect('listing', listing_id=listing.id)
