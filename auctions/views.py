@@ -13,7 +13,7 @@ from .models import User, Listing, Bid
 # Import forms
 from .forms import (
     RegisterForm, CreateListingForm,
-    LoginForm, BidForm
+    LoginForm, BidForm, CommentForm
 )
 
 
@@ -135,6 +135,7 @@ def listing(request, listing_id):
     current_price = current_bid.amount if current_bid else listing.starting_bid
 
     bid_form = BidForm()
+    comment_form = CommentForm()
 
     if request.method == 'POST':
         # Closing auction
@@ -166,6 +167,20 @@ def listing(request, listing_id):
                     messages.error(
                         request, f"Your bid must be higher than the current price (${current_price}).")
 
+        # Adding a comment
+        if 'add_comment' in request.POST:
+            if not request.user.is_authenticated:
+                return redirect('login')
+
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.listing = listing
+                new_comment.user = request.user
+                new_comment.save()
+                messages.success(request, "Comment added!")
+                return redirect('listing', listing_id=listing.id)
+
     # Check if the user won the auction
     user_is_winner = request.user.is_authenticated and not listing.is_active and request.user == listing.winner
 
@@ -174,6 +189,8 @@ def listing(request, listing_id):
         "current_price": current_price,
         "is_watched": is_watched,
         "bid_form": bid_form,
+        "comment_form": comment_form,
+        "comments": listing.comments.order_by('-timestamp'),
         "current_bidder": current_bid.bidder if current_bid else None,
         "user_is_winner": user_is_winner
     })

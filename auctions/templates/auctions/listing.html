@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
 {% load widget_tweaks %}
-
+{% load humanize %}
 <div class="container">
   <h2>{{ listing.title }}</h2>
 
@@ -79,5 +79,32 @@
     </form>
   {% endif %}
 </div>
+
+<hr class="mt-4">
+<h5>Comments</h5>
+{% if user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+<div class="form-group">
+  <label for="id_text">Your Comment</label>
+  {% render_field comment_form.text class="form-control" placeholder="Write your comment here..." %}
+</div>
+    <button type="submit" name="add_comment" class="btn btn-secondary mt-2">Post Comment</button>
+</form>
+{% else %}
+<p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
+{% endif %}
+
+<ul class="list-group mt-3">
+  {% for comment in comments %}
+  <li class="list-group-item">
+    <strong>{{ comment.user.username }}</strong> <small class="text-muted">{{ comment.timestamp|naturaltime }}</small><br>
+    {{ comment.content }}
+  </li>
+  {% empty %}
+  <li class="list-group-item text-muted">No comments yet.</li>
+  {% endfor %}
+</ul>
+
 
 {% endblock %}

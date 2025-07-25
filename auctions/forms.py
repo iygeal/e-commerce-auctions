@@ -1,4 +1,4 @@
-from .models import Bid
+from .models import Bid, Comment
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Listing, User, Category
@@ -62,4 +62,14 @@ class BidForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Enter your bid'
             })
+        }
+
+
+# Comment form using ModelForm
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'content': forms.Textarea(attrs={'row': 2, 'class': 'form-control', 'placeholder': 'Add a comment...'})
         }
