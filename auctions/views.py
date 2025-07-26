@@ -1,3 +1,4 @@
+from .models import Category  # Make sure it's imported
 from .models import Listing
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -8,7 +9,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import User, Listing, Bid
+from .models import User, Listing, Bid, Category
 
 # Import forms
 from .forms import (
@@ -206,5 +207,28 @@ def closed_listings(request):
     """
     listings = Listing.objects.filter(is_active=False).order_by('-id')
     return render(request, "auctions/closed_listings.html", {
+        "listings": listings
+    })
+
+
+def categories_view(request):
+    """
+    Display all categories (regardless of listing count).
+    """
+    categories = Category.objects.all()
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+
+def category_listings(request, category_name):
+    """
+    Display all active listings within a given category.
+    """
+    category = get_object_or_404(Category, name=category_name)
+    listings = Listing.objects.filter(category=category, is_active=True)
+
+    return render(request, "auctions/category_listings.html", {
+        "category": category,
         "listings": listings
     })

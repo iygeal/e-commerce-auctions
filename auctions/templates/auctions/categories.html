@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+<h3>Browse by Category</h3>
+<ul class="list-group">
+  {% for category in categories %}
+  <li class="list-group-item">
+    <a href="{% url 'category_listings' category.name %}">{{ category.name }}</a>
+  </li>
+  {% empty %}
+  <li class="list-group-item text-muted">No categories found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

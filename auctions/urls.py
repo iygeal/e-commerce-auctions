@@ -13,5 +13,9 @@ urlpatterns = [
          views.toggle_watchlist, name="toggle_watchlist"),
     path("watchlist", views.watchlist_view, name="watchlist"),
     path("closed/", views.closed_listings, name="closed_listings"),
+    path("categories/", views.categories_view, name="categories"),
+    path("categories/<str:category_name>/",
+         views.category_listings, name="category_listings"),
+
 
 ]
