@@ -72,7 +72,7 @@ class Bid(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.bidder} bid ${self.amount} on {self.listing}"
+        return f"{self.bidder} bid ₦{self.amount} on {self.listing}"
 
 
 # Comment model

@@ -166,7 +166,7 @@ def listing(request, listing_id):
                     return redirect('listing', listing_id=listing.id)
                 else:
                     messages.error(
-                        request, f"Your bid must be higher than the current price (${current_price}).")
+                        request, f"Your bid must be higher than the current price (₦{current_price}).")
 
         # Adding a comment
         if 'add_comment' in request.POST:
