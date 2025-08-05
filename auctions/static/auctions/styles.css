@@ -1,3 +1,9 @@
 body {
-    padding: 10px;
+  padding: 10px;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+  transition: all 0.3s ease-in-out;
 }

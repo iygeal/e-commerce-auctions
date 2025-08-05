@@ -8,10 +8,9 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body style="background-color: #f8f9fa;">
-        <h1>Auctions</h1>
         <div>
             {% if user.is_authenticated %}
-                You are signed in as <strong>{{ user.username }}</strong>.
+                Welcome to E-commerce Auctions!
             {% else %}
                 You have not signed in yet.
             {% endif %}
@@ -68,7 +67,7 @@
 
 
         <hr>
-    <div class="container mt-8">
+    <div class="container mt-5">
         {% block body %}
         {% endblock %}
     </div>
