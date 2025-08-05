@@ -7,3 +7,12 @@ body {
   transform: translateY(-4px);
   transition: all 0.3s ease-in-out;
 }
+
+.card-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.list-group-item {
+  border-left: 4px solid #cce5ff;
+}
