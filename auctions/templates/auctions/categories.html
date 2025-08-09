@@ -1,31 +1,17 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
 <div class="container mt-4">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h3 class="card-title mb-4">Browse by Category</h3>
-      <ul class="list-group">
-        {% for category in categories %}
-        <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow">
-          <a href="{% url 'category_listings' category.name %}" class="text-decoration-none fw-bold">
-            {{ category.name }}
-          </a>
-          <span class="badge bg-primary rounded-pill">
-            View
-          </span>
-        </li>
-        {% empty %}
-        <li class="list-group-item text-muted">No categories found.</li>
-        {% endfor %}
-      </ul>
-    </div>
+  <h3 class="mb-4 text-success fw-bold">Browse by Category</h3>
+
+  <div class="d-flex flex-wrap gap-2">
+    {% for category in categories %}
+      <a href="{% url 'category_listings' category.name %}"
+         class="badge bg-success-subtle text-success-emphasis border border-success rounded-pill px-3 py-2 text-decoration-none hover-shadow">
+        {{ category.name }}
+      </a>
+    {% empty %}
+      <span class="text-muted fst-italic">No categories found.</span>
+    {% endfor %}
   </div>
 </div>
-
-<style>
-  .hover-shadow:hover {
-    background-color: #f8f9fa;
-    transition: background-color 0.2s ease-in-out;
-  }
-</style>
 {% endblock %}
