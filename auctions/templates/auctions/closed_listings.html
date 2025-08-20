@@ -12,7 +12,7 @@
             <div class="card-body">
               <h5 class="card-title">{{ listing.title }}</h5>
               <p class="card-text">{{ listing.description|truncatewords:20 }}</p>
-              <p><strong>Final Price:</strong> ${{ listing.current_price }}</p>
+              <p><strong>Final Price:</strong> ₦{{ listing.current_price }}</p>
               {% if listing.winner %}
                 <p><strong>Winner:</strong> {{ listing.winner.username }}</p>
               {% endif %}

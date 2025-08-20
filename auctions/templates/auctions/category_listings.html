@@ -21,7 +21,7 @@
               </h5>
               <p class="card-text text-muted small">{{ listing.description|truncatewords:15 }}</p>
               <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="badge badge-success">${{ listing.starting_bid }}</span>
+                <span class="badge badge-success">₦{{ listing.starting_bid }}</span>
                 <a href="{% url 'listing' listing.id %}" class="btn btn-sm btn-outline-primary">View</a>
               </div>
             </div>

@@ -18,7 +18,7 @@
                   </a>
                 </h5>
                 <p class="card-text text-muted small flex-grow-1">{{ listing.description|truncatewords:20 }}</p>
-                <p class="mb-2"><strong>Price:</strong> ${{ listing.starting_bid }}</p>
+                <p class="mb-2"><strong>Price:</strong> ₦{{ listing.starting_bid }}</p>
                 <a href="{% url 'listing' listing.id %}" class="btn btn-outline-success mt-auto">
                   View Listing
                 </a>

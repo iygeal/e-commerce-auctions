@@ -55,7 +55,7 @@ class Listing(models.Model):
         This is the string representation of a listing.
         It returns the title of the listing followed by the current price in parentheses.
         """
-        return f"{self.title} (${self.current_price})"
+        return f"{self.title} (₦{self.current_price})"
 
 
 # Bid model
