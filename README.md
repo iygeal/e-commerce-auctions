@@ -6,17 +6,17 @@ A full-stack auction web application built with Django that allows users to crea
 
 ## Screenshots
 ### Active Listings/Homepage
-![Active Listings](./screenshots/active_listings.png)
+![Active Listings](./assets/active_listings.png)
 
 ### Watchlist
-![Watchlist](./screenshots/watchlist.png)
+![Watchlist](./assets/watchlist.png)
 
 
 ### Closed Auctions
-![Closed Auctions](./screenshots/closed_auctions.png)
+![Closed Auctions](./assets/closed_auctions.png)
 
 ### Create New Listing
-![Create New Listing](./screenshots/create_listing.png)
+![Create New Listing](./assets/create_listing.png)
 
 
 ## ✨ Features
