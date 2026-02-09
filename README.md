@@ -13,7 +13,7 @@ A full-stack auction web application built with Django that allows users to crea
 
 
 ### Closed Auctions
-<img src="https://github.com/user-attachments/assets/e61c0f00-6e8b-4639-bb29-96bbfc1180cb">
+<img width="479" height="685" alt="Image" src="https://github.com/user-attachments/assets/e61c0f00-6e8b-4639-bb29-96bbfc1180cb" />
 
 ### Create New Listing
 ![Create New Listing](assets/create_listing.png)
